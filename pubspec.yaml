@@ -21,6 +21,9 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  mobx: ^2.0.3
+  flutter_mobx: ^2.0.1
+  provider: ^5.0.0
   flutter:
     sdk: flutter
 
