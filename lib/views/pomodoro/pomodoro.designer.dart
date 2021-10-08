@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:mobx_relogio_pomodoro/components/chronometer_button.dart';
 import 'package:mobx_relogio_pomodoro/components/circularbutton.dart';
-import 'package:mobx_relogio_pomodoro/components/enterTime.dart';
 import 'package:mobx_relogio_pomodoro/components/refresh_button.dart';
+import 'package:mobx_relogio_pomodoro/store/pomodoro.store.dart';
+import 'package:provider/provider.dart';
 
 class Pomodoro extends StatelessWidget {
   const Pomodoro({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    //CRIAÇÃO/INSTANCIAÇÃO DO PROVIDER
+    final store = Provider.of<PomodoroStore>(context);
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: Column(
@@ -48,13 +52,13 @@ class Pomodoro extends StatelessWidget {
               ),
             ),
           ),
-          _buttons(context),
+          _buttons(context, store),
         ],
       ),
     );
   }
 
-  _buttons(BuildContext context) {
+  _buttons(BuildContext context, PomodoroStore provider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -68,7 +72,7 @@ class Pomodoro extends StatelessWidget {
           ),
         ),
         CircularButton(
-          onTap: () => _modalBottomSheet(context),
+          onTap: () => _modalBottomSheet(context, provider),
           child: Icon(
             Icons.settings,
             size: 24,
@@ -79,14 +83,14 @@ class Pomodoro extends StatelessWidget {
     );
   }
 
-  _modalBottomSheet(BuildContext context) {
+  _modalBottomSheet(BuildContext context, PomodoroStore provider) {
     return showModalBottomSheet(
       context: context,
       builder: (context) => Column(
         children: [
           ListTile(
             title: Text("Trabalho"),
-            trailing: Text("25" + "min"),
+            trailing: Text(provider.tempoTrabalho.toString() + "min"),
             onTap: () {
               showModalBottomSheet(
                 context: context,
@@ -95,20 +99,16 @@ class Pomodoro extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircularButton(
-                      onTap: () {
-                        print("Hello!");
-                      },
+                      onTap: () => provider.incrementarTempoTrabalho(),
                       child: Icon(
                         Icons.add,
                         size: 24,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
-                    Text("25min"),
+                    Text(provider.tempoTrabalho.toString()),
                     CircularButton(
-                      onTap: () {
-                        print("Hello!");
-                      },
+                      onTap: () => provider.decrementartempoTrabalho(),
                       child: Icon(
                         Icons.remove,
                         size: 24,
@@ -122,7 +122,7 @@ class Pomodoro extends StatelessWidget {
           ),
           ListTile(
             title: Text("Descanso"),
-            trailing: Text("25" + "min"),
+            trailing: Text(provider.tempoTrabalho.toString() + "min"),
             onTap: () => showModalBottomSheet(
               context: context,
               builder: (context) => Row(
@@ -139,7 +139,7 @@ class Pomodoro extends StatelessWidget {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  Text("25min"),
+                  Text(provider.tempoDescanso.toString()),
                   CircularButton(
                     onTap: () {
                       print("Hello!");
