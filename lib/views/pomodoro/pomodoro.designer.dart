@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx_relogio_pomodoro/components/chronometer_button.dart';
 import 'package:mobx_relogio_pomodoro/components/circularbutton.dart';
 import 'package:mobx_relogio_pomodoro/components/refresh_button.dart';
@@ -87,70 +88,75 @@ class Pomodoro extends StatelessWidget {
     return showModalBottomSheet(
       context: context,
       builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          ListTile(
-            title: Text("Trabalho"),
-            trailing: Text(provider.tempoTrabalho.toString() + "min"),
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) => Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircularButton(
-                      onTap: () => provider.incrementarTempoTrabalho(),
-                      child: Icon(
-                        Icons.add,
-                        size: 24,
-                        color: Theme.of(context).primaryColor,
-                      ),
+          Observer(
+            builder: (_) => ListTile(
+              title: Text("Trabalho"),
+              trailing: Text(provider.tempoTrabalho.toString() + "min"),
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => Observer(
+                    builder: (_) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircularButton(
+                          onTap: () => provider.incrementarTempoTrabalho(),
+                          child: Icon(
+                            Icons.add,
+                            size: 24,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        Text(provider.tempoTrabalho.toString()),
+                        CircularButton(
+                          onTap: () => provider.decrementartempoTrabalho(),
+                          child: Icon(
+                            Icons.remove,
+                            size: 24,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(provider.tempoTrabalho.toString()),
-                    CircularButton(
-                      onTap: () => provider.decrementartempoTrabalho(),
-                      child: Icon(
-                        Icons.remove,
-                        size: 24,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
+                  ),
+                );
+              },
+            ),
           ),
-          ListTile(
-            title: Text("Descanso"),
-            trailing: Text(provider.tempoTrabalho.toString() + "min"),
-            onTap: () => showModalBottomSheet(
-              context: context,
-              builder: (context) => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircularButton(
-                    onTap: () {
-                      print("Hello!");
-                    },
-                    child: Icon(
-                      Icons.add,
-                      size: 24,
-                      color: Theme.of(context).primaryColor,
-                    ),
+          Observer(
+            builder: (_) => ListTile(
+              title: Text("Descanso"),
+              trailing: Text(provider.tempoDescanso.toString() + "min"),
+              onTap: () => showModalBottomSheet(
+                context: context,
+                builder: (context) => Observer(
+                  builder: (_) => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircularButton(
+                        onTap: () => provider.incrementarTempoDescanso(),
+                        child: Icon(
+                          Icons.add,
+                          size: 24,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      Text(provider.tempoDescanso.toString()),
+                      CircularButton(
+                        onTap: () => provider.decrementartempoDescanso(),
+                        child: Icon(
+                          Icons.remove,
+                          size: 24,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(provider.tempoDescanso.toString()),
-                  CircularButton(
-                    onTap: () {
-                      print("Hello!");
-                    },
-                    child: Icon(
-                      Icons.remove,
-                      size: 24,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
