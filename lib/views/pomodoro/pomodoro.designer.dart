@@ -12,7 +12,14 @@ class Pomodoro extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text("Pomodoro"),
+          Text(
+            "Hora de Trabalhar!",
+            style: TextStyle(
+              fontFamily: "Montserrat",
+              fontSize: 32,
+              color: Color.fromARGB(255, 250, 250, 250),
+            ),
+          ),
           EnterTime(titulo: 'Trabalho', valor: 25),
           EnterTime(titulo: 'Descanso', valor: 5),
           _buttons(context),
