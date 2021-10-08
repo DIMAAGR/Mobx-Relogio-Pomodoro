@@ -4,11 +4,13 @@ class CircularButton extends StatelessWidget {
   // VARIAVEIS
   final void Function() onTap;
   final Widget? child;
+  final Color? color;
   // CONSTRUTOR
   const CircularButton({
     Key? key,
     required this.onTap,
     this.child,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -20,7 +22,7 @@ class CircularButton extends StatelessWidget {
         height: 40,
         width: 40,
         decoration: BoxDecoration(
-            color: Color.fromARGB(255, 250, 250, 250),
+            color: color == null ? Color.fromARGB(255, 250, 250, 250) : color,
             borderRadius: BorderRadius.circular(40)),
         child: child,
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobx_relogio_pomodoro/components/chronometer_button.dart';
 import 'package:mobx_relogio_pomodoro/components/circularbutton.dart';
 import 'package:mobx_relogio_pomodoro/components/enterTime.dart';
+import 'package:mobx_relogio_pomodoro/components/refresh_button.dart';
 
 class Pomodoro extends StatelessWidget {
   const Pomodoro({Key? key}) : super(key: key);
@@ -10,18 +12,42 @@ class Pomodoro extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            "Hora de Trabalhar!",
-            style: TextStyle(
-              fontFamily: "Montserrat",
-              fontSize: 32,
-              color: Color.fromARGB(255, 250, 250, 250),
+          Stack(alignment: Alignment.center, children: [
+            Container(
+              height: 184,
+              width: 184,
+              child: CircularProgressIndicator(
+                strokeWidth: 5.5,
+                value: 0,
+                backgroundColor: Color(0xffA20006),
+                color: Color.fromARGB(255, 250, 250, 250),
+              ),
+            ),
+            Text(
+              "25:00",
+              style: TextStyle(
+                fontFamily: "Montserrat",
+                fontSize: 40,
+                fontWeight: FontWeight.w700,
+                color: Color.fromARGB(255, 250, 250, 250),
+              ),
+            ),
+          ]),
+          Padding(
+            padding: const EdgeInsets.only(top: 48.0, bottom: 92.0),
+            child: Text(
+              "Hora de Trabalhar!",
+              style: TextStyle(
+                fontFamily: "Montserrat",
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                color: Color.fromARGB(255, 250, 250, 250),
+              ),
             ),
           ),
-          EnterTime(titulo: 'Trabalho', valor: 25),
-          EnterTime(titulo: 'Descanso', valor: 5),
           _buttons(context),
         ],
       ),
@@ -32,25 +58,13 @@ class Pomodoro extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircularButton(
-          onTap: () {
-            print("Hello!");
-          },
-          child: Icon(
-            Icons.play_arrow,
-            size: 24,
-            color: Theme.of(context).primaryColor,
-          ),
+        ChronometerButton(
+          hasStarted: false,
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: CircularButton(
-            onTap: () {},
-            child: Icon(
-              Icons.replay,
-              size: 24,
-              color: Theme.of(context).primaryColor,
-            ),
+          child: RefreshButton(
+            off: true,
           ),
         ),
         CircularButton(
@@ -109,32 +123,35 @@ class Pomodoro extends StatelessWidget {
           ListTile(
             title: Text("Descanso"),
             trailing: Text("25" + "min"),
-            onTap: () => Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CircularButton(
-                  onTap: () {
-                    print("Hello!");
-                  },
-                  child: Icon(
-                    Icons.add,
-                    size: 24,
-                    color: Theme.of(context).primaryColor,
+            onTap: () => showModalBottomSheet(
+              context: context,
+              builder: (context) => Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularButton(
+                    onTap: () {
+                      print("Hello!");
+                    },
+                    child: Icon(
+                      Icons.add,
+                      size: 24,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
-                ),
-                Text("25min"),
-                CircularButton(
-                  onTap: () {
-                    print("Hello!");
-                  },
-                  child: Icon(
-                    Icons.remove,
-                    size: 24,
-                    color: Theme.of(context).primaryColor,
+                  Text("25min"),
+                  CircularButton(
+                    onTap: () {
+                      print("Hello!");
+                    },
+                    child: Icon(
+                      Icons.remove,
+                      size: 24,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
