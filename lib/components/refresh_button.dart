@@ -3,7 +3,9 @@ import 'package:mobx_relogio_pomodoro/components/circularButton.dart';
 
 class RefreshButton extends StatelessWidget {
   final bool off;
-  const RefreshButton({Key? key, required this.off}) : super(key: key);
+  final Color? color;
+  const RefreshButton({Key? key, required this.off, this.color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +15,7 @@ class RefreshButton extends StatelessWidget {
             child: Icon(
               Icons.replay,
               size: 24,
-              color: Theme.of(context).primaryColor,
+              color: color,
             ),
           )
         : CircularButton(
@@ -22,7 +24,7 @@ class RefreshButton extends StatelessWidget {
             child: Icon(
               Icons.replay,
               size: 24,
-              color: Theme.of(context).primaryColor,
+              color: color,
             ));
   }
 }

@@ -4,6 +4,7 @@ import 'package:mobx_relogio_pomodoro/components/chronometer_button.dart';
 import 'package:mobx_relogio_pomodoro/components/circularbutton.dart';
 import 'package:mobx_relogio_pomodoro/components/refresh_button.dart';
 import 'package:mobx_relogio_pomodoro/store/pomodoro.store.dart';
+import 'package:mobx_relogio_pomodoro/views/pomodoro/pomodoro.dart';
 import 'package:provider/provider.dart';
 
 class Pomodoro extends StatelessWidget {
@@ -14,8 +15,13 @@ class Pomodoro extends StatelessWidget {
     //CRIAÇÃO/INSTANCIAÇÃO DO PROVIDER
     final store = Provider.of<PomodoroStore>(context);
 
+    // EVENTOS/AÇÕES
+    final PomodoroEvents _events = PomodoroEvents();
+
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: store.estaTrabalhando()
+          ? Theme.of(context).primaryColor
+          : Color(0xff529300),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -27,12 +33,14 @@ class Pomodoro extends StatelessWidget {
               child: CircularProgressIndicator(
                 strokeWidth: 5.5,
                 value: 0,
-                backgroundColor: Color(0xffA20006),
+                backgroundColor: store.estaTrabalhando()
+                    ? Color(0xffA20006)
+                    : Color(0xff165F00),
                 color: Color.fromARGB(255, 250, 250, 250),
               ),
             ),
             Text(
-              "25:00",
+              "${store.minutos.toString().padLeft(2, '0')}:${store.segundos.toString().padLeft(2, '0')}",
               style: TextStyle(
                 fontFamily: "Montserrat",
                 fontSize: 40,
@@ -44,7 +52,9 @@ class Pomodoro extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 48.0, bottom: 92.0),
             child: Text(
-              "Hora de Trabalhar!",
+              store.estaTrabalhando()
+                  ? "Hora de Trabalhar!"
+                  : "Hora de Descansar!",
               style: TextStyle(
                 fontFamily: "Montserrat",
                 fontSize: 24,
@@ -53,38 +63,51 @@ class Pomodoro extends StatelessWidget {
               ),
             ),
           ),
-          _buttons(context, store),
+          _buttons(context, store, _events),
         ],
       ),
     );
   }
 
-  _buttons(BuildContext context, PomodoroStore provider) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ChronometerButton(
-          hasStarted: false,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: RefreshButton(
-            off: true,
+  _buttons(
+      BuildContext context, PomodoroStore provider, PomodoroEvents _events) {
+    return Observer(
+      builder: (_) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ChronometerButton(
+            hasStarted: provider.iniciou ? true : false,
+            color: provider.estaTrabalhando()
+                ? Theme.of(context).primaryColor
+                : Color(0xff529300),
+            onTap: () => _events.startStopEvent(provider),
           ),
-        ),
-        CircularButton(
-          onTap: () => _modalBottomSheet(context, provider),
-          child: Icon(
-            Icons.settings,
-            size: 24,
-            color: Theme.of(context).primaryColor,
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: RefreshButton(
+              color: provider.estaTrabalhando()
+                  ? Theme.of(context).primaryColor
+                  : Color(0xff529300),
+              off: !provider.iniciou ? true : false,
+            ),
           ),
-        ),
-      ],
+          CircularButton(
+            onTap: () => _modalBottomSheet(context, provider, _events),
+            child: Icon(
+              Icons.settings,
+              size: 24,
+              color: provider.estaTrabalhando()
+                  ? Theme.of(context).primaryColor
+                  : Color(0xff529300),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  _modalBottomSheet(BuildContext context, PomodoroStore provider) {
+  _modalBottomSheet(
+      BuildContext context, PomodoroStore provider, PomodoroEvents _events) {
     return showModalBottomSheet(
       context: context,
       builder: (context) => Column(
@@ -102,8 +125,9 @@ class Pomodoro extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        // CIRCULAR BUTTON: IncrementTimeButton1
                         CircularButton(
-                          onTap: () => provider.incrementarTempoTrabalho(),
+                          onTap: () => _events.incrementWorkEvent(provider),
                           child: Icon(
                             Icons.add,
                             size: 24,
@@ -111,8 +135,9 @@ class Pomodoro extends StatelessWidget {
                           ),
                         ),
                         Text(provider.tempoTrabalho.toString()),
+                        // CIRCULAR BUTTON: DecrementTimeButton1
                         CircularButton(
-                          onTap: () => provider.decrementartempoTrabalho(),
+                          onTap: () => _events.decrementWorkEvent(provider),
                           child: Icon(
                             Icons.remove,
                             size: 24,
@@ -138,7 +163,8 @@ class Pomodoro extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CircularButton(
-                        onTap: () => provider.incrementarTempoDescanso(),
+                        // CIRCULAR BUTTON: IncrementTimeButton2
+                        onTap: () => _events.incrementRestEvent(provider),
                         child: Icon(
                           Icons.add,
                           size: 24,
@@ -146,8 +172,9 @@ class Pomodoro extends StatelessWidget {
                         ),
                       ),
                       Text(provider.tempoDescanso.toString()),
+                      // CIRCULAR BUTTON: DecrementTimeButton2
                       CircularButton(
-                        onTap: () => provider.decrementartempoDescanso(),
+                        onTap: () => _events.decrementRestEvent(provider),
                         child: Icon(
                           Icons.remove,
                           size: 24,

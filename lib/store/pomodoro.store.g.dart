@@ -39,6 +39,51 @@ mixin _$PomodoroStore on _PomodoroStore, Store {
     });
   }
 
+  final _$minutosAtom = Atom(name: '_PomodoroStore.minutos');
+
+  @override
+  int get minutos {
+    _$minutosAtom.reportRead();
+    return super.minutos;
+  }
+
+  @override
+  set minutos(int value) {
+    _$minutosAtom.reportWrite(value, super.minutos, () {
+      super.minutos = value;
+    });
+  }
+
+  final _$segundosAtom = Atom(name: '_PomodoroStore.segundos');
+
+  @override
+  int get segundos {
+    _$segundosAtom.reportRead();
+    return super.segundos;
+  }
+
+  @override
+  set segundos(int value) {
+    _$segundosAtom.reportWrite(value, super.segundos, () {
+      super.segundos = value;
+    });
+  }
+
+  final _$iniciouAtom = Atom(name: '_PomodoroStore.iniciou');
+
+  @override
+  bool get iniciou {
+    _$iniciouAtom.reportRead();
+    return super.iniciou;
+  }
+
+  @override
+  set iniciou(bool value) {
+    _$iniciouAtom.reportWrite(value, super.iniciou, () {
+      super.iniciou = value;
+    });
+  }
+
   final _$_PomodoroStoreActionController =
       ActionController(name: '_PomodoroStore');
 
@@ -87,10 +132,35 @@ mixin _$PomodoroStore on _PomodoroStore, Store {
   }
 
   @override
+  void iniciar() {
+    final _$actionInfo = _$_PomodoroStoreActionController.startAction(
+        name: '_PomodoroStore.iniciar');
+    try {
+      return super.iniciar();
+    } finally {
+      _$_PomodoroStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void parar() {
+    final _$actionInfo = _$_PomodoroStoreActionController.startAction(
+        name: '_PomodoroStore.parar');
+    try {
+      return super.parar();
+    } finally {
+      _$_PomodoroStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 tempoTrabalho: ${tempoTrabalho},
-tempoDescanso: ${tempoDescanso}
+tempoDescanso: ${tempoDescanso},
+minutos: ${minutos},
+segundos: ${segundos},
+iniciou: ${iniciou}
     ''';
   }
 }
