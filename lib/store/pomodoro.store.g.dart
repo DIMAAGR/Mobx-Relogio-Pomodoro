@@ -39,6 +39,21 @@ mixin _$PomodoroStore on _PomodoroStore, Store {
     });
   }
 
+  final _$finalMinutesAtom = Atom(name: '_PomodoroStore.finalMinutes');
+
+  @override
+  int get finalMinutes {
+    _$finalMinutesAtom.reportRead();
+    return super.finalMinutes;
+  }
+
+  @override
+  set finalMinutes(int value) {
+    _$finalMinutesAtom.reportWrite(value, super.finalMinutes, () {
+      super.finalMinutes = value;
+    });
+  }
+
   final _$minutosAtom = Atom(name: '_PomodoroStore.minutos');
 
   @override
@@ -132,6 +147,17 @@ mixin _$PomodoroStore on _PomodoroStore, Store {
   }
 
   @override
+  dynamic reiniciar() {
+    final _$actionInfo = _$_PomodoroStoreActionController.startAction(
+        name: '_PomodoroStore.reiniciar');
+    try {
+      return super.reiniciar();
+    } finally {
+      _$_PomodoroStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void iniciar() {
     final _$actionInfo = _$_PomodoroStoreActionController.startAction(
         name: '_PomodoroStore.iniciar');
@@ -158,6 +184,7 @@ mixin _$PomodoroStore on _PomodoroStore, Store {
     return '''
 tempoTrabalho: ${tempoTrabalho},
 tempoDescanso: ${tempoDescanso},
+finalMinutes: ${finalMinutes},
 minutos: ${minutos},
 segundos: ${segundos},
 iniciou: ${iniciou}

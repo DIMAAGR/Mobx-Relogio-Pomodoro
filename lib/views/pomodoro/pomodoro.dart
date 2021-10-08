@@ -1,3 +1,4 @@
+import 'package:mobx_relogio_pomodoro/data/data.dart';
 import 'package:mobx_relogio_pomodoro/store/pomodoro.store.dart';
 
 class PomodoroEvents {
@@ -11,14 +12,26 @@ class PomodoroEvents {
   // TAMBEM OPTEI EM FAZER ISSO COMO UM TESTE PARA VERIFICAR SE
   // SERIA MELHOR SE O CODIGO FOSSE ORGANIZADO DESSA MANEIRA.
 
-  void incrementWorkEvent(PomodoroStore provider) =>
-      provider.incrementarTempoTrabalho();
-  void decrementWorkEvent(PomodoroStore provider) =>
-      provider.decrementartempoTrabalho();
-  void incrementRestEvent(PomodoroStore provider) =>
-      provider.incrementarTempoDescanso();
-  void decrementRestEvent(PomodoroStore provider) =>
-      provider.decrementartempoDescanso();
+  void incrementWorkEvent(PomodoroStore provider, TimeData timeData) {
+    timeData.incrementarMinutosTrabalho();
+    provider.incrementarTempoTrabalho();
+  }
+
+  void decrementWorkEvent(PomodoroStore provider, TimeData timeData) {
+    provider.decrementartempoTrabalho();
+    timeData.decrementarMinutosTrabalho();
+  }
+
+  void incrementRestEvent(PomodoroStore provider, TimeData timeData) {
+    provider.incrementarTempoDescanso();
+    timeData.incrementarMinutosDescanso();
+  }
+
+  void decrementRestEvent(PomodoroStore provider, TimeData timeData) {
+    provider.decrementartempoDescanso();
+    timeData.decrementarMinutosDescanso();
+  }
+
   void startStopEvent(PomodoroStore provider) =>
       provider.iniciou ? provider.parar() : provider.iniciar();
 }

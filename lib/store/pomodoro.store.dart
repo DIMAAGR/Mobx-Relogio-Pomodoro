@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:mobx/mobx.dart';
 
 part 'pomodoro.store.g.dart'; // IMPORTANDO O POMODORO STORE G
@@ -20,6 +22,8 @@ abstract class _PomodoroStore with Store {
   int tempoTrabalho = 1;
   @observable
   int tempoDescanso = 1;
+  @observable
+  int finalMinutes = 1;
 
   // Também Haverá duas variaveis inteiras minutos e segundos
   @observable
@@ -31,24 +35,62 @@ abstract class _PomodoroStore with Store {
   @observable
   bool iniciou = false;
 
+  // Como o tempo muda de segundo à segundo é necessário um timer
+  Timer? cronometro;
+
   // Defini o tipo de trabalho atual
   TipoIntervalo tipoIntervalo = TipoIntervalo.TRABALHO;
 
   // Ações
   @action
   void incrementarTempoTrabalho() => tempoTrabalho++;
+
   @action
   void decrementartempoTrabalho() => tempoTrabalho--;
+
   @action
   void incrementarTempoDescanso() => tempoDescanso++;
+
   @action
   void decrementartempoDescanso() => tempoDescanso--;
+
   @action
-  void iniciar() => iniciou = true;
+  reiniciar() => parar();
+
   @action
-  void parar() => iniciou = false;
+  void iniciar() {
+    iniciou = true;
+    cronometro = Timer.periodic(Duration(milliseconds: 50), (timer) {
+      if (minutos == 0 && segundos == 0) {
+        _trocarTipoIntervalo();
+      } else if (segundos == 0) {
+        segundos = 59;
+        minutos--;
+        finalMinutes++;
+      } else {
+        segundos--;
+      }
+    });
+  }
+
+  @action
+  void parar() {
+    iniciou = false;
+    cronometro?.cancel(); // SENTENÇA DE CODIGO NULLSAFE
+  }
 
   //FUNÇÕES PARA FACILITAR LOGICA
   bool estaTrabalhando() => tipoIntervalo == TipoIntervalo.TRABALHO;
   bool estaDescansando() => tipoIntervalo == TipoIntervalo.DESCANSO;
+
+  void _trocarTipoIntervalo() {
+    if (estaTrabalhando()) {
+      tipoIntervalo = TipoIntervalo.DESCANSO;
+      minutos = tempoDescanso;
+    } else {
+      tipoIntervalo = TipoIntervalo.TRABALHO;
+      minutos = tempoTrabalho;
+    }
+    segundos = 0;
+  }
 }
