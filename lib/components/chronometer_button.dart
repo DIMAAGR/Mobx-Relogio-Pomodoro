@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobx_relogio_pomodoro/components/circularButton.dart';
-import 'package:mobx_relogio_pomodoro/store/pomodoro.store.dart';
 
 class ChronometerButton extends StatelessWidget {
   final bool hasStarted;
