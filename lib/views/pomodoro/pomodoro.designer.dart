@@ -91,6 +91,7 @@ class Pomodoro extends StatelessWidget {
                 ? Theme.of(context).primaryColor
                 : Color(0xff529300),
             off: !provider.iniciou ? true : false,
+            onTap: () => provider.reiniciar(),
           ),
         ),
         CircularButton(

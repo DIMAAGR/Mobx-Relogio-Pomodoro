@@ -22,8 +22,6 @@ abstract class _PomodoroStore with Store {
   int tempoTrabalho = 1;
   @observable
   int tempoDescanso = 1;
-  @observable
-  int finalMinutes = 1;
 
   // Também Haverá duas variaveis inteiras minutos e segundos
   @observable
@@ -43,19 +41,24 @@ abstract class _PomodoroStore with Store {
 
   // Ações
   @action
-  void incrementarTempoTrabalho() => tempoTrabalho++;
+  void incrementarTempoTrabalho() => ++tempoTrabalho;
 
   @action
-  void decrementartempoTrabalho() => tempoTrabalho--;
+  void decrementartempoTrabalho() => --tempoTrabalho;
 
   @action
-  void incrementarTempoDescanso() => tempoDescanso++;
+  void incrementarTempoDescanso() => ++tempoDescanso;
 
   @action
-  void decrementartempoDescanso() => tempoDescanso--;
+  void decrementartempoDescanso() =>
+      tempoDescanso > 1 ? --tempoDescanso : tempoDescanso = 1;
 
   @action
-  reiniciar() => parar();
+  reiniciar() {
+    parar();
+    minutos = estaTrabalhando() ? tempoTrabalho : tempoDescanso;
+    segundos = 0;
+  }
 
   @action
   void iniciar() {
@@ -66,7 +69,6 @@ abstract class _PomodoroStore with Store {
       } else if (segundos == 0) {
         segundos = 59;
         minutos--;
-        finalMinutes++;
       } else {
         segundos--;
       }

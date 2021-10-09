@@ -14,22 +14,27 @@ class PomodoroEvents {
 
   void incrementWorkEvent(PomodoroStore provider, TimeData timeData) {
     timeData.incrementarMinutosTrabalho();
+    if (provider.estaTrabalhando()) provider.reiniciar();
     provider.incrementarTempoTrabalho();
   }
 
   void decrementWorkEvent(PomodoroStore provider, TimeData timeData) {
-    provider.decrementartempoTrabalho();
-    timeData.decrementarMinutosTrabalho();
+    if (provider.tempoTrabalho > 1) timeData.decrementarMinutosTrabalho();
+    if (provider.estaTrabalhando()) provider.reiniciar();
+    if (provider.tempoTrabalho > 1) provider.decrementartempoTrabalho();
   }
 
   void incrementRestEvent(PomodoroStore provider, TimeData timeData) {
-    provider.incrementarTempoDescanso();
     timeData.incrementarMinutosDescanso();
+    if (provider.estaDescansando()) provider.reiniciar();
+    provider.incrementarTempoDescanso();
   }
 
   void decrementRestEvent(PomodoroStore provider, TimeData timeData) {
+    if (provider.tempoDescanso > 1) timeData.decrementarMinutosDescanso();
+    if (provider.tempoDescanso == 0) provider.incrementarTempoDescanso();
+    if (provider.estaDescansando()) provider.reiniciar();
     provider.decrementartempoDescanso();
-    timeData.decrementarMinutosDescanso();
   }
 
   void startStopEvent(PomodoroStore provider) =>
